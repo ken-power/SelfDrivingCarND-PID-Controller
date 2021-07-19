@@ -38,6 +38,14 @@ private:
      */
     double p_error;
     double i_error;
+public:
+    double P() const;
+
+    double I() const;
+
+    double D() const;
+
+private:
     double d_error;
 
     /**
