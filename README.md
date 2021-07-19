@@ -20,6 +20,17 @@ The speed limit is 100 mph. Try to drive SAFELY as fast as possible. There is no
 | | Describe how the final hyperparameters were chosen. | Student discusses how they chose the final hyperparameters (P, I, D coefficients). This could be have been done through manual tuning, twiddle, SGD, or something else, or a combination! | Open
 **Simulation** | The vehicle must successfully drive a lap around the track. | No tire may leave the drivable portion of the track surface. The car may not pop up onto ledges or roll over any surfaces that would otherwise be considered unsafe (if humans were in the vehicle). | Open
 
+## Implementation
+
+### PID Procedure
+
+## Reflection
+
+### Effect of PID Components
+
+### Hyperparameter Selection
+
+## Simulation
 
 # Building and running the project
 
