@@ -41,7 +41,6 @@ double PID::UpdateError(double cte)
     return steering_value;
 }
 
-
 double PID::TotalError(double cte)
 {
     return this->twiddle.TotalError(this->p, cte);
@@ -49,6 +48,7 @@ double PID::TotalError(double cte)
 
 const double *PID::ParameterVector() const
 {
-    return p;
+    double p_vector[] = {this->p_error, this->i_error, this->d_error};
+    return p_vector;
 }
 
