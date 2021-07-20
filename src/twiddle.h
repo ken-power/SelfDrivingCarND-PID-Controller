@@ -37,14 +37,14 @@ struct Twiddle
         if(this->iteration == this->twiddle_update)
         {
             this->best_error = total_error;
-            this->RunTwiddle(p);
+            this->Run(p);
             this->stage += 1;
         }
 
         if(this->iteration > this->twiddle_update and
            this->iteration % this->twiddle_update == 0)
         {
-            this->RunTwiddle(p);
+            this->Run(p);
             total_error = 0;
             this->iteration = 1000;
             this->stage += 1;
@@ -67,7 +67,7 @@ struct Twiddle
     int iteration;
 
 private:
-    void RunTwiddle(double *p)
+    void Run(double *p)
     {
         this->sum_dp = 0;
 
@@ -79,6 +79,7 @@ private:
 
         if(this->sum_dp > this->tolerance and this->stage == 1)
         {
+
             p[this->param] += this->dp[this->param];
             total_error = 0;
         }

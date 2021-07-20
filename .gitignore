@@ -5,3 +5,7 @@ cmake-build-debug/
 
 # Ignore temporary spreadsheet files
 logs/~*.xlsx
+
+# The MP4 files are too large for Github
+# I uploaded the main one to YouTube: https://youtu.be/wLro7LwDlis
+videos/*.mp4

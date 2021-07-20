@@ -69,11 +69,10 @@ int main()
 
     PID pid_steering_controller;
 
-    // Initialize the pid variable.
-    double Kp = 0.1;
-    double Ki = 0.00;
-    double Kd = 10.0;
-    pid_steering_controller.Init(Kp, Ki, Kd);
+    double initial_p = 0.1;
+    double initial_i = 0.00;
+    double initial_d = 10.0;
+    pid_steering_controller.Init(initial_p, initial_i, initial_d);
 
     h.onMessage([&pid_steering_controller]
                         (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -102,7 +101,6 @@ int main()
                     total_error = pid_steering_controller.TotalError(cte);
 
                     DebugLog(pid_steering_controller, cte, speed, angle, steer_value, total_error);
-
 
                     json msgJson;
                     msgJson["steering_angle"] = steer_value;
