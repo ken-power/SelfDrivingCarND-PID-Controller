@@ -5,6 +5,27 @@
 #include <math.h>
 
 // for convenience
+void DebugLog(const PID & pid_steering_controller,
+              double cte,
+              double speed,
+              double angle,
+              double steer_value,
+              double total_error);
+
+void LogToConsole(const PID & pid_steering_controller,
+                  double cte,
+                  double speed,
+                  double angle,
+                  double steer_value,
+                  double total_error);
+
+void LogToCSV(const PID & pid_steering_controller,
+              double cte,
+              double speed,
+              double angle,
+              double steer_value,
+              double total_error);
+
 using json = nlohmann::json;
 
 // For converting back and forth between radians and degrees.
@@ -62,7 +83,7 @@ int main()
         if(length && length > 2 && data[0] == '4' && data[1] == '2')
         {
             auto json_message = hasData(std::string(data).substr(0, length));
-            if(json_message != "")
+            if(!json_message.empty())
             {
                 auto j = json::parse(json_message);
                 std::string event = j[0].get<std::string>();
@@ -80,16 +101,7 @@ int main()
                     steer_value = pid_steering_controller.UpdateError(cte);
                     total_error = pid_steering_controller.TotalError(cte);
 
-                    std::cout
-                              << " P: " << pid_steering_controller.ParameterVector()[0]
-                              << " I: " << pid_steering_controller.ParameterVector()[2]
-                              << " D: " << pid_steering_controller.ParameterVector()[1]
-                              << "\tCTE: " << cte
-                              << "\tTotal Error: " << total_error
-                              << "\tSpeed: " << speed
-                              << "\tSteer Value: " << steer_value
-                              << "\tSteering angle: " << angle
-                              << std::endl;
+                    DebugLog(pid_steering_controller, cte, speed, angle, steer_value, total_error);
 
 
                     json msgJson;
@@ -131,4 +143,55 @@ int main()
         return -1;
     }
     h.run();
+}
+
+void DebugLog(const PID & pid_steering_controller,
+              double cte,
+              double speed,
+              double angle,
+              double steer_value,
+              double total_error)
+{
+    LogToConsole(pid_steering_controller, cte, speed, angle, steer_value, total_error);
+//    LogToCSV(pid_steering_controller, cte, speed, angle, steer_value, total_error);
+}
+
+void LogToConsole(const PID & pid_steering_controller,
+                  double cte,
+                  double speed,
+                  double angle,
+                  double steer_value,
+                  double total_error)
+{
+    std::cout
+              << " P: " << pid_steering_controller.ParameterVector()[0]
+              << " I: " << pid_steering_controller.ParameterVector()[1]
+              << " D: " << pid_steering_controller.ParameterVector()[2]
+              << "\tCTE: " << cte
+              << "\tTotal Error: " << total_error
+              << "\tSpeed: " << speed
+              << "\tSteer Value: " << steer_value
+              << "\tSteering angle: " << angle
+              << std::endl;
+}
+
+void LogToCSV(const PID & pid_steering_controller,
+                  double cte,
+                  double speed,
+                  double angle,
+                  double steer_value,
+                  double total_error)
+{
+    const char separator = ',';
+
+    std::cout
+            << pid_steering_controller.ParameterVector()[0] << separator
+            << pid_steering_controller.ParameterVector()[1] << separator
+            << pid_steering_controller.ParameterVector()[2] << separator
+            << cte << separator
+            << total_error << separator
+            << speed << separator
+            << steer_value << separator
+            << angle << separator
+            << std::endl;
 }
