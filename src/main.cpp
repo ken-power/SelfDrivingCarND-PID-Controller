@@ -95,6 +95,7 @@ int main()
                     double angle = std::stod(j[1]["steering_angle"].get<std::string>());
                     double steer_value;
                     double total_error;
+                    double MAX_SPEED = 0.50;  // 0.5 = 50 mph
 
                     // Calculate the steering value; remember the steering value is in the range [-1, 1]
                     steer_value = pid_steering_controller.UpdateError(cte);
@@ -104,7 +105,7 @@ int main()
 
                     json msgJson;
                     msgJson["steering_angle"] = steer_value;
-                    msgJson["throttle"] = 0.50;
+                    msgJson["throttle"] = MAX_SPEED;
 
                     auto msg = "42[\"steer\"," + msgJson.dump() + "]";
                     //std::cout << msg << std::endl;

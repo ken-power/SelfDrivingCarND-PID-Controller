@@ -84,6 +84,24 @@ I arrived at the following initial values for `P`, `I`, and `D` following a proc
     pid_steering_controller.Init(initial_p, initial_i, initial_d);
 ```
 
+I set the maximum speed to 50 mph. I tried different speeds, and found the car tends to collide with the side of track at around 70-75 mph using this controller. You can vary the speed by changign the value of `MAX_SPEED` in [main.cpp](src/main.cpp).
+
+One improvement I could make to the project would be to write a second PID controller for the throttle, but for now, the implementation meets specifications without that.
+
+```c++
+    double MAX_SPEED = 0.50;  // 0.5 = 50 mph
+
+    // Calculate the steering value; remember the steering value is in the range [-1, 1]
+    steer_value = pid_steering_controller.UpdateError(cte);
+    total_error = pid_steering_controller.TotalError(cte);
+
+    ...
+    
+    json msgJson;
+    msgJson["steering_angle"] = steer_value;
+    msgJson["throttle"] = MAX_SPEED;
+```
+
 ### Twiddle
 
 A run() function returns some measure of goodness, i.e., `run() -> goodness`. This goodness might be the average crosscheck error. In my PID controller I implement Twiddle to minimise the average crosscheck error.
