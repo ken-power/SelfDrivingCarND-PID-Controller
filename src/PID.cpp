@@ -1,66 +1,54 @@
-#include "PID.h"
 
-/**
- * TODO: Complete the PID class. You may add any additional desired functions.
- */
+#include "PID.h"
 
 PID::PID()
 {
-    this->Kp = 0.0;
-    this->Ki = 0.0;
-    this->Kd = 0.0;
+    double tolerance = 0.0001;
+    this->twiddle = Twiddle(tolerance);
 }
 
-PID::~PID()
-{}
+PID::~PID() = default;
 
-/**
- * Initialize PID coefficients (and errors, if needed)
- */
 void PID::Init(double Kp_, double Ki_, double Kd_)
 {
+    // Initial controller values
     this->Kp = Kp_;
     this->Ki = Ki_;
     this->Kd = Kd_;
+    this->p[0] = Kp;
+    this->p[1] = Kd;
+    this->p[2] = Ki;
+
+    // Error values
+    this->p_error = 0.0;
     this->p_error = 0.0;
     this->i_error = 0.0;
     this->d_error = 0.0;
+
+    double tolerance = 0.0001;
+    this->twiddle = Twiddle(tolerance);
 }
 
-/**
- * Update PID errors based on cte.
- */
-void PID::UpdateError(double cte)
+double PID::UpdateError(double cte)
 {
-    // Set p_error to the new CTE
+    this->twiddle.iteration += 1;
+    this->i_error += cte;
+    this->d_error = cte - this->p_error;
     this->p_error = cte;
 
-    // i_error is the sum of CTEs so far
-    this->i_error += cte;
+    this->steering_value = -p[0] * cte - p[1] * d_error - p[2] * i_error;
 
-    // d_error is difference between the new CTE and old CTE (p_error)
-    this->d_error = cte - p_error;
+    return steering_value;
 }
 
-/**
- * Calculate and return the total error
- */
-double PID::TotalError()
+
+double PID::TotalError(double cte)
 {
-    return ((-Kp * p_error) - (Ki * i_error) - (Kd * d_error) );
+    return this->twiddle.TotalError(this->p, cte);
 }
 
-double PID::P() const
+const double *PID::ParameterVector() const
 {
-    return p_error;
+    return p;
 }
 
-double PID::I() const
-{
-    return i_error;
-}
-
-double PID::D() const
-{
-    return d_error;
-}
